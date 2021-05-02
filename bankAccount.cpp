@@ -35,8 +35,14 @@ std::vector<std::string> Atm::ListAccounts()
         return {};
     }
 
-    // Query bank for accounts
-    return supportedBanks[insertedCard.bankId].GetAccounts(insertedCard, token);
+    // Query bank for accounts and pull account names
+    std::vector<std::string> accounts;
+    for (std::pair<std::string, int> entry : supportedBanks[insertedCard.bankId].GetAccounts(insertedCard, token))
+    {
+        accounts.push_back(entry.first);
+    }
+
+    return accounts;
 }
 
 int Atm::GetBalance(std::string account)
@@ -94,19 +100,6 @@ bool Atm::DepositMoney(std::string account, int deposit)
 
 
 // Bank
-/*
- * This data structure holds all relevant user info and is stored as such:
- *          unordered map
- *          /           \
- *       (key)          (value)
- * userId (int)   pair <int, vector<string, int>>
- *                   /         \
- *       hashed PIN (int)    vector of pairs <string, int>
- *                              /                  \
- *                  account name (string)       account balance (int)
- */
-std::unordered_map<int, std::pair<int, std::vector<std::pair<std::string, int>>>> userInfo;
-
 AccessToken Bank::GenerateToken()
 {
     return AccessToken(true, time(0));
