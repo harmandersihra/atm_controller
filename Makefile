@@ -1,5 +1,5 @@
 
-output: *.cpp *.hpp output.exe
+output: *.cpp *.hpp
 	g++ *.cpp -o output.exe
 
 clean:
