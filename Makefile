@@ -1,7 +1,6 @@
 
-output: 
+output: *.cpp *.hpp output.exe
+	g++ *.cpp -o output.exe
 
-
-
-target: dependencies
-	action
+clean:
+	rm -rf output.exe
