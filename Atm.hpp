@@ -10,7 +10,7 @@ class Atm
 {
 private:
     int cashInBin;
-    int pin;
+    int storedPin;
     BankCard insertedCard;
     BankCard dummyCard = 
     {

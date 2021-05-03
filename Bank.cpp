@@ -70,7 +70,7 @@ bool Bank::WithdrawMoney(BankCard card, std::string account, int withdrawal, int
 
     // Get account balance and see if the withdrawal is valid (not trying to withdraw
     // more money than is in the account).
-    for (std::pair<std::string, int> accountEntry : userInfo[card.userId].second)
+    for (std::pair<std::string, int> &accountEntry : userInfo[card.userId].second)
     {
         if (accountEntry.first.compare(account) == 0)
         {
@@ -94,7 +94,7 @@ bool Bank::DepositMoney(BankCard card, std::string account, int deposit, int pin
     if (!VerifyUser(card, pin)) return false;
 
     // Make sure the account exists and if it does, deposit the money
-    for (std::pair<std::string, int> accountEntry : userInfo[card.userId].second)
+    for (std::pair<std::string, int> &accountEntry : userInfo[card.userId].second)
     {
         if (accountEntry.first.compare(account) == 0)
         {

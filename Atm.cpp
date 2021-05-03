@@ -14,14 +14,14 @@ bool Atm::InsertCard(BankCard card, int pin)
 
     // If we do get a valid response, we hold on to the token and log the user in
     insertedCard = card;
-    pin = pin;
+    storedPin = pin;
     return true;
 }
 
 void Atm::RemoveCard()
 {
     insertedCard = dummyCard;
-    pin = -1;
+    storedPin = -1;
 }
 
 std::vector<std::string> Atm::ListAccounts()
@@ -35,7 +35,7 @@ std::vector<std::string> Atm::ListAccounts()
 
     // Query bank for accounts and pull account names
     std::vector<std::pair<std::string, int>> accountEntries =
-        supportedBanks[insertedCard.bankId]->GetAccounts(insertedCard, pin);
+        supportedBanks[insertedCard.bankId]->GetAccounts(insertedCard, storedPin);
     std::vector<std::string> accounts;
     for (std::pair<std::string, int> entry : accountEntries)
     {
@@ -51,11 +51,11 @@ int Atm::GetBalance(std::string account)
     if (insertedCard == dummyCard)
     {
         std::cout << "User not logged in. Please insert card" << std::endl;
-        return {};
+        return -1;
     }
 
     // Query bank for balance
-    return supportedBanks[insertedCard.bankId]->GetAccountBalance(insertedCard, account, pin);
+    return supportedBanks[insertedCard.bankId]->GetAccountBalance(insertedCard, account, storedPin);
 }
 
 bool Atm::WithdrawMoney(std::string account, int withdrawal)
@@ -64,11 +64,11 @@ bool Atm::WithdrawMoney(std::string account, int withdrawal)
     if (insertedCard == dummyCard)
     {
         std::cout << "User not logged in. Please insert card" << std::endl;
-        return {};
+        return false;
     }
 
     // Check to see if bank allows withdrawal
-    if (supportedBanks[insertedCard.bankId]->WithdrawMoney(insertedCard, account, withdrawal, pin))
+    if (supportedBanks[insertedCard.bankId]->WithdrawMoney(insertedCard, account, withdrawal, storedPin))
     {
         // If it does, then take money out of ATM
         cashInBin -= withdrawal;
@@ -84,11 +84,11 @@ bool Atm::DepositMoney(std::string account, int deposit)
     if (insertedCard == dummyCard)
     {
         std::cout << "User not logged in. Please insert card" << std::endl;
-        return {};
+        return false;
     }
 
     // Check to see if bank allows depositing the money
-    if (supportedBanks[insertedCard.bankId]->DepositMoney(insertedCard, account, deposit, pin))
+    if (supportedBanks[insertedCard.bankId]->DepositMoney(insertedCard, account, deposit, storedPin))
     {
         // If it does, then add money to the ATM
         cashInBin += deposit;
